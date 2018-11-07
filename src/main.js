@@ -12,9 +12,11 @@ import policyList from './components/PolicyList'
 import policyDetail from './components/PolicyDetail'
 import visitItemDetail from './components/VisitItemDetail'
 import addVisitItem from './components/AddVisitItem'
-import qs from 'qs';
+import qs from 'qs'
+import axios from 'axios'
 Vue.prototype.$qs = qs;
-
+Vue.prototype.$axios = axios;
+Vue.prototype.$fastClick = FastClick;
 Vue.use(VueRouter)
 
 /* eslint-disable */
@@ -64,13 +66,14 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  mode:"history",
   routes
 })
 
-FastClick.attach(document.body)
+FastClick.attach(document.body);
 
-Vue.config.productionTip = false
-axios.defaults.baseURL = 'http://118.190.157.253:9447';
+Vue.config.productionTip = false;
+axios.defaults.baseURL = 'http://172.25.13.253:8081';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // Date原型链扩展
 Date.prototype.format = function (format) {

@@ -77,7 +77,6 @@
 <script>
 import {
   Group,
-  Cell,
   CellFormPreview,
   CellBox,
   XButton,
@@ -95,7 +94,6 @@ export default {
   },
   components: {
     Group,
-    Cell,
     CellBox,
     CellFormPreview,
     XButton,
@@ -150,7 +148,7 @@ export default {
         doctorWork: this.docWork,
         doctorLocation: this.docHospital
       });
-      axios({ method: "post", url: "/patient/add", data: params })
+      this.$axios({ method: "post", url: "/patient/add", data: params })
         .then(response => {
           this.submitting = false;
           if(response && response.data && response.data.success){

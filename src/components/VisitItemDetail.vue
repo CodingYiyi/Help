@@ -13,9 +13,18 @@
     </div>
     <group>
       <cell primary="content" title="帮扶措施" :value="helpDetail"></cell>
+      <cell-box>
+        <span style="color:#999;font-size:14px;margin-right: 10px;">帮扶照片</span>
+        <div v-for="(item, index) in helpPic" class="img_box" :style="{marginRight:index != 2? '10px': 0}">
+          <img :src="item.src" class="pic_item"  @click="showImg(index)">
+        </div>
+      </cell-box>
     </group>
     <div v-transfer-dom>
       <loading :show="loading" text="数据加载中..."></loading>
+    </div>
+    <div v-transfer-dom>
+      <previewer :list="helpPic" ref="previewer" :options="options"></previewer>
     </div>
   </div>
 </template>
@@ -25,7 +34,9 @@ import {
   Msg,
   Group,
   Cell,
+  CellBox,
   Loading,
+  Previewer,
   TransferDomDirective as TransferDom
 } from "vux";
 
@@ -37,11 +48,13 @@ export default {
     Msg,
     Group,
     Cell,
-    Loading
+    CellBox,
+    Loading,
+    Previewer
   },
   mounted: function() {
     this.loading = true;
-    axios
+    this.$axios
       .get("/assist/query", { params: { recordId: this.$route.params.id } })
       .then(response => {
         this.loading = false;
@@ -52,6 +65,16 @@ export default {
           );
           this.doctorName = data.familyDoctor.doctorName;
           this.helpDetail = data.assistDetail.assistDetail;
+          if (
+            data.assistDetail.assistImage &&
+            data.assistDetail.assistImage.length > 0
+          ) {
+            for (let item of data.assistDetail.assistImage.split(",")) {
+              this.helpPic.push({
+                src: item
+              });
+            }
+          }
         } else {
           console.log("获取随访详情接口报错啦。。。");
         }
@@ -65,7 +88,25 @@ export default {
       loading: false,
       recordTime: "",
       doctorName: "",
-      helpDetail: ""
+      helpDetail: "",
+      helpPic: [],
+
+      options: {
+        getThumbBoundsFn(index) {
+          // find thumbnail element
+          let thumbnail = document.querySelectorAll(".pic_item")[index];
+          // get window scroll Y
+          let pageYScroll =
+            window.pageYOffset || document.documentElement.scrollTop;
+          // optionally get horizontal scroll
+          // get position of element relative to viewport
+          let rect = thumbnail.getBoundingClientRect();
+          // w = width
+          return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+          // Good guide on how to get element coordinates:
+          // http://javascript.info/tutorial/coordinates
+        }
+      }
     };
   },
   filters: {
@@ -84,6 +125,11 @@ export default {
     getTime: function(value) {
       if (!value || value.length < 12) return "";
       else return value.substring(8, 10) + ":" + value.substring(10, 12);
+    }
+  },
+  methods:{
+    showImg(index) {
+      this.$refs.previewer.show(index);
     }
   }
 };
@@ -104,6 +150,17 @@ export default {
 }
 .item-record > span {
   margin-right: 6px;
+}
+.img_box {
+  position: relative;
+  width: 60px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.pic_item {
+  width: 60px;
 }
 </style>
 <style>
@@ -127,9 +184,13 @@ export default {
 }
 .visit-detail .weui-cell__ft {
   text-align: left;
+  color: #2c2e32;
 }
 .visit-detail .weui-cells {
   font-size: 14px;
+}
+.visit-detail .vux-label {
+  color: #999;
 }
 </style>
 

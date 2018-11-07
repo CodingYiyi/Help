@@ -37,7 +37,7 @@ export default {
   },
   mounted: function() {
     this.loading = true;
-    axios
+    this.$axios
       .get("/policy/getPolicyList")
       .then(response => {
         this.loading = false;

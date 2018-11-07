@@ -5,6 +5,7 @@
       <cell-box>
          <x-icon type="android-person"></x-icon>
          <span style="margin-left:6px">贫困户信息</span>
+         <span v-if="canEdit" class="edit" @click="editInfo"><x-icon type="android-create"></x-icon>编辑</span>
       </cell-box>
       <cell-form-preview :list="userInfo"></cell-form-preview>
       <cell-box>
@@ -64,7 +65,6 @@ import {
   TransferDom,
   Popup,
   Group,
-  Cell,
   CellFormPreview,
   CellBox,
   Panel,
@@ -80,7 +80,6 @@ export default {
   components: {
     Popup,
     Group,
-    Cell,
     CellBox,
     CellFormPreview,
     Panel,
@@ -97,16 +96,20 @@ export default {
       doctorInfo: [],
       QRCodeUrl: "",
       visitItems: [],
-      loading:false
+      loading: false,
+      canEdit: false
     };
   },
   doctorId: "",
   patientId: "",
   doctorName: "",
   mounted: function() {
+    window.sessionStorage.getItem("loginType") == "admin"
+      ? (this.canEdit = true)
+      : "";
     this.loading = true;
     var patientId = this.$route.params.id;
-    axios
+    this.$axios
       .get("patient/queryPatientDetail", { params: { patientId: patientId } })
       .then(response => {
         this.loading = false;
@@ -191,6 +194,8 @@ export default {
             this.doctorName = data.familyDoctor.doctorName;
             this.doctorId = data.familyDoctor.doctorId;
             this.patientId = data.patient.patientId;
+            window.sessionStorage.setItem("doctorInfo",JSON.stringify(data.familyDoctor));
+            window.sessionStorage.setItem("patientInfo",JSON.stringify(data.patient));
           }
         }
       })
@@ -212,7 +217,9 @@ export default {
     getInHosDays(start, end) {
       var startDate = new Date(start);
       var endDate = new Date(end);
-      return startDate.format("yyyy-MM-dd") + " 〜 " + endDate.format("yyyy-MM-dd");
+      return (
+        startDate.format("yyyy-MM-dd") + " 〜 " + endDate.format("yyyy-MM-dd")
+      );
     },
     goToAdd() {
       this.$router.push({
@@ -227,6 +234,9 @@ export default {
     formatDate(time) {
       var date = new Date(time);
       return date.format("yyyyMMddhhmm");
+    },
+    editInfo() {
+      this.$router.push("/patientEdit");
     }
   }
 };
@@ -256,6 +266,11 @@ export default {
   background: #fff;
   box-sizing: border-box;
   border-top: 1px solid #e5e5e5;
+}
+.edit {
+  display: flex;
+  position: absolute;
+  right: 20px;
 }
 </style>
 <style>
