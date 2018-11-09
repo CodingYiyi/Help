@@ -148,7 +148,7 @@ export default {
         doctorWork: this.docWork,
         doctorLocation: this.docHospital
       });
-      this.$axios({ method: "post", url: "/patient/add", data: params })
+      this.$axios({ method: "post", url: "/patient/add.next", data: params })
         .then(response => {
           this.submitting = false;
           if(response && response.data && response.data.success){

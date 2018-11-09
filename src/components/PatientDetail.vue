@@ -1,6 +1,7 @@
 <template>
   <div class="patient_detail_page" style="margin-bottom:70px">
     <div class="propaganda_img"></div>
+    <div style="height:36px;line-height:36px;text-align:center;color:#fc9f0e;background-color:#ffe6c6">手机远程会诊系统正在完善中···</div>
     <group gutter="10px" class="no-border" :class="{ fold: !isOpen }">
       <cell-box>
          <x-icon type="android-person"></x-icon>
@@ -110,7 +111,7 @@ export default {
     this.loading = true;
     var patientId = this.$route.params.id;
     this.$axios
-      .get("patient/queryPatientDetail", { params: { patientId: patientId } })
+      .get("patient/queryPatientDetail.next", { params: { patientId: patientId } })
       .then(response => {
         this.loading = false;
         if (response && response.data) {

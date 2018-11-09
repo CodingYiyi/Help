@@ -64,7 +64,7 @@ export default {
     window.sessionStorage.setItem("loginType", "admin");//只有管理员才能访问患者列表页面
     this.loading = true;
     this.$axios
-      .get("/patient/getPatientList")
+      .get("/patient/getPatientList.next")
       .then(response => {
         this.loading = false;
         this.patientList = response.data.data;
@@ -90,7 +90,7 @@ export default {
       if (value === "adminQZ") {
         window.sessionStorage.setItem("loginType", "admin");
         window.sessionStorage.setItem("loginTime", new Date().getTime());
-        this.$router.push("addPatient");
+        this.$router.push("/addPatient");
       } else {
         this.showToast = true;
       }

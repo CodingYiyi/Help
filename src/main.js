@@ -12,6 +12,7 @@ import policyList from './components/PolicyList'
 import policyDetail from './components/PolicyDetail'
 import visitItemDetail from './components/VisitItemDetail'
 import addVisitItem from './components/AddVisitItem'
+import notFound from './components/404'
 import qs from 'qs'
 import axios from 'axios'
 Vue.prototype.$qs = qs;
@@ -20,8 +21,7 @@ Vue.prototype.$fastClick = FastClick;
 Vue.use(VueRouter)
 
 /* eslint-disable */
-const routes = [
-  {
+const routes = [{
     path: '/',
     redirect: "/patientList"
   },
@@ -62,18 +62,21 @@ const routes = [
     path: '/addVisitItem',
     name: 'addVisitItem',
     component: addVisitItem
+  }, {
+    path: "*",
+    component: notFound
   }
 ]
 
 const router = new VueRouter({
-  mode:"history",
+  mode: "history",
   routes
 })
 
 FastClick.attach(document.body);
 
 Vue.config.productionTip = false;
-axios.defaults.baseURL = 'http://172.25.13.253:8081';
+axios.defaults.baseURL = 'http://118.190.157.253:9447/';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // Date原型链扩展
 Date.prototype.format = function (format) {

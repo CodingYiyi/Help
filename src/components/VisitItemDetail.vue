@@ -55,7 +55,7 @@ export default {
   mounted: function() {
     this.loading = true;
     this.$axios
-      .get("/assist/query", { params: { recordId: this.$route.params.id } })
+      .get("/assist/query.next", { params: { recordId: this.$route.params.id } })
       .then(response => {
         this.loading = false;
         if (response && response.data && response.data.success) {

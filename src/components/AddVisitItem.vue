@@ -25,6 +25,7 @@
     <div v-transfer-dom>
       <previewer :list="selectedPic" ref="previewer" :options="options"></previewer>
     </div>
+    <toast v-model="showToast" type="text" :time="3000" is-show-mask text="网络异常，请稍后重试" position="middle"></toast>
     <input type="file" accept="image/*" style="display:none" id="selectPic" @change="selectPic">
     <footer class="footer">
       <x-button type="primary" :show-loading="submitting" :disabled="submitting" @click.native="add">保存随访记录</x-button>
@@ -43,6 +44,7 @@ import {
   Datetime,
   Loading,
   Previewer,
+  Toast,
   TransferDomDirective as TransferDom
 } from "vux";
 export default {
@@ -58,7 +60,8 @@ export default {
     XTextarea,
     Datetime,
     Loading,
-    Previewer
+    Previewer,
+    Toast
   },
   data() {
     return {
@@ -68,6 +71,7 @@ export default {
       submitting: false,
       selectedPic: [],
       canAddPic: true,
+      showToast: false,
 
       options: {
         getThumbBoundsFn(index) {
@@ -114,12 +118,12 @@ export default {
       params.append("assistDetail", this.helpMeasure);
       params.append("createTime", new Date(this.helpDate).getTime());
       let config = {
-        timeout: 10000,
+        timeout: 30000,
         headers: {
           "Content-Type": "multipart/form-data"
         }
       };
-      this.$axios.post("/assist/add", params ,config)
+      this.$axios.post("/assist/add.next", params ,config)
         .then(response => {
           this.submitting = false;
           if (response && response.data && response.data.success) {
@@ -127,9 +131,12 @@ export default {
               name: "patientDetail",
               params: { id: this.$route.query.patientId }
             });
+          }else{
+            this.showToast = true;
           }
         })
         .catch(error => {
+          this.showToast = true;
           this.submitting = false;
         });
     },

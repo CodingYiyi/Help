@@ -38,7 +38,7 @@ export default {
   mounted: function() {
     this.loading = true;
     this.$axios
-      .get("/policy/getPolicyList")
+      .get("/policy/getPolicyList.next")
       .then(response => {
         this.loading = false;
         if (response && response.data && response.data.success) {
