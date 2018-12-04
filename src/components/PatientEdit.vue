@@ -121,7 +121,7 @@ export default {
   data() {
     return {
       patInfo: {
-        id:"",
+        id: "",
         name: "",
         sex: "1",
         age: "",
@@ -148,13 +148,13 @@ export default {
   mounted: function() {
     let patientInfo = JSON.parse(window.sessionStorage.getItem("patientInfo"));
     let doctorInfo = JSON.parse(window.sessionStorage.getItem("doctorInfo"));
-    let startDate = new Date(patientInfo.startTime).format("yyyy/MM/dd");
-    let endDate = new Date(patientInfo.endTime).format("yyyy/MM/dd");
+    let startDate = patientInfo.startTime ? new Date(patientInfo.startTime).format("yyyy/MM/dd"):"";
+    let endDate = patientInfo.endTime ? new Date(patientInfo.endTime).format("yyyy/MM/dd"):"";
     this.patInfo = {
       id: patientInfo.patientId,
       name: patientInfo.patientName,
       sex: patientInfo.patientSex,
-      age: patientInfo.patientAge,
+      age: patientInfo.patientAge === null ? "":patientInfo.patientAge,
       telephone: patientInfo.patientPhone,
       homeAddress: patientInfo.patientAddress,
       family: patientInfo.familyMember,
@@ -199,7 +199,7 @@ export default {
     updateInfo() {
       this.submitting = true;
       var params = this.$qs.stringify({
-        patientId:this.patInfo.id,
+        patientId: this.patInfo.id,
         patientName: this.patInfo.name,
         patientSex: this.patInfo.sex,
         patientAge: this.patInfo.age,
@@ -209,8 +209,10 @@ export default {
         emergencyContact: this.patInfo.emergencyContact,
         hospitalName: this.patInfo.hospital,
         hospitalCode: this.patInfo.hosNo,
-        startTime: new Date(this.patInfo.startDate).getTime(),
-        endTime: new Date(this.patInfo.endDate).getTime(),
+        startTime:
+          this.patInfo.startDate == "" ? "" : new Date(this.patInfo.startDate).getTime(),
+        endTime:
+          this.patInfo.endDate == "" ? "" : new Date(this.patInfo.endDate).getTime(),
         diagnosis: this.patInfo.diagnose,
         doctorName: this.docInfo.docName,
         doctorPhone: this.docInfo.docPhone,

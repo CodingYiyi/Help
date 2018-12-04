@@ -111,7 +111,9 @@ export default {
     this.loading = true;
     var patientId = this.$route.params.id;
     this.$axios
-      .get("patient/queryPatientDetail.next", { params: { patientId: patientId } })
+      .get("patient/queryPatientDetail.next", {
+        params: { patientId: patientId }
+      })
       .then(response => {
         this.loading = false;
         if (response && response.data) {
@@ -195,8 +197,14 @@ export default {
             this.doctorName = data.familyDoctor.doctorName;
             this.doctorId = data.familyDoctor.doctorId;
             this.patientId = data.patient.patientId;
-            window.sessionStorage.setItem("doctorInfo",JSON.stringify(data.familyDoctor));
-            window.sessionStorage.setItem("patientInfo",JSON.stringify(data.patient));
+            window.sessionStorage.setItem(
+              "doctorInfo",
+              JSON.stringify(data.familyDoctor)
+            );
+            window.sessionStorage.setItem(
+              "patientInfo",
+              JSON.stringify(data.patient)
+            );
           }
         }
       })
@@ -216,11 +224,15 @@ export default {
       this.isShowQR = true;
     },
     getInHosDays(start, end) {
-      var startDate = new Date(start);
-      var endDate = new Date(end);
-      return (
-        startDate.format("yyyy-MM-dd") + " 〜 " + endDate.format("yyyy-MM-dd")
-      );
+      if (start && end) {
+        var startDate = new Date(start);
+        var endDate = new Date(end);
+        return (
+          startDate.format("yyyy-MM-dd") + " 〜 " + endDate.format("yyyy-MM-dd")
+        );
+      }else{
+        return ""
+      }
     },
     goToAdd() {
       this.$router.push({

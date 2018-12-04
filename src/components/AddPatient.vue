@@ -140,8 +140,8 @@ export default {
         emergencyContact: this.emergencyContact,
         hospitalName: this.hospital,
         hospitalCode: this.hosNo,
-        startTime: new Date(this.startDate).getTime(),
-        endTime: new Date(this.endDate).getTime(),
+        startTime: this.startDate !== "" ? (new Date(this.startDate).getTime()) : "",
+        endTime: this.endDate !== "" ? (new Date(this.endDate).getTime()) : "",
         diagnosis: this.diagnose,
         doctorName: this.docName,
         doctorPhone: this.docPhone,
@@ -151,9 +151,12 @@ export default {
       this.$axios({ method: "post", url: "/patient/add.next", data: params })
         .then(response => {
           this.submitting = false;
-          if(response && response.data && response.data.success){
-            this.$router.push({ name: "patientDetail", params: { id: response.data.data } });
-          }else{
+          if (response && response.data && response.data.success) {
+            this.$router.push({
+              name: "patientDetail",
+              params: { id: response.data.data }
+            });
+          } else {
             console.error("添加用户信息接口出错啦。。。");
           }
         })
